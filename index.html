@@ -1,0 +1,167 @@
+<!--
+
+Description: Simple CRUD using AngularJS, Bootstrap, Datatables, PHP and MariaDB/MySQL
+
+Author: Kelvin Fernandez
+Date: 2019-04-04
+email: kelvinfm@yahoo.com
+github: https://github.com/kelvinfm
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>BOOKS</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
+		<meta http-equiv="Pragma" content="no-cache">
+		<link rel="stylesheet" href="vendor/css/bootstrap_v3.3.7.min.css">
+		<link rel="stylesheet" href="vendor/css/datatables.bootstrap_v0.5.6.min.css">
+		<script src="vendor/js/jquery_v3.2.1.min.js"></script>
+		<script src="vendor/js/jquery.dataTables_v1.10.19.min.js"></script>
+		<script src="vendor/js/dataTables.bootstrap_v1.10.19.min.js"></script>
+		<script src="vendor/js/angular_v1.7.8.min.js"></script>
+		<script src="vendor/js/angular-datatables_v0.5.6.min.js"></script>
+		<script src="vendor/js/bootstrap_v3.3.7.min.js"></script>
+	</head>		
+	
+
+	
+	<body ng-app="appProperty" ng-controller="ctrlProperty">
+
+		<div class="container-fluid">
+			<div class="modal fade" tabindex="-1" role="dialog" id="modalProperty">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<form method="post" ng-submit="submit()" autocomplete="off">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<h4 class="modal-title">{{modal_title}} Books</h4>
+							</div>
+							<div class="modal-body">
+								<div class="form-group" ng-if="isShowId">
+									<label>ID</label>
+									<input type="text" class="form-control" ng-model="id" readonly>
+								</div>
+								<div class="form-group">
+									<label>Title</label>
+									<input type="text" class="form-control" ng-model="title">
+								</div>
+								<div class="form-group">
+									<label>Description</label>
+									<input type="text" class="form-control" ng-model="description">
+								</div>
+								<div class="form-group">
+									<label>Author</label>
+									<input type="text" class="form-control" ng-model="author">
+								</div>
+								<div class="form-group">
+									<label>Category</label>
+									<div class="radio">
+										<label><input type="radio" ng-model="category" value="None">None</label>
+									</div>
+									<div class="radio">
+										<label><input type="radio" ng-model="category" value="Programming">Programming</label>
+									</div>
+									<div class="radio">
+										<label><input type="radio" ng-model="category" value="Education">Education</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Language</label>
+									<select class="form-control" ng-model="language">
+										<option value="None">None</option>
+										<option value="English">English</option>
+										<option value="Spanish">Spanish</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label>Country</label>
+									<select class="form-control" ng-model="country">
+										<option value="None">None</option>
+										<option value="United States">United States</option>
+										<option value="Venezuela">Venezuela</option>
+									</select>
+								</div>
+								<div class="form-group"> 
+									<label>Status</label>
+									<div class="checkbox">
+										<label><input type="checkbox" ng-model="status" ng-true-value="'Active'" ng-false-value="'Inactive'">Active / Inactive</label>
+									</div>
+								</div>
+								<div class="form-group">
+									<label>Date</label>
+									<input type="text" class="form-control" ng-model="date" readonly>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-default btn-xs" ng-click="create()" ng-show="isCreate"><span class="glyphicon glyphicon-save"></span>&nbsp;Create</button>
+								<button type="button" class="btn btn-default btn-xs" ng-click="update()" ng-show="isUpdate"><span class="glyphicon glyphicon-save"></span>&nbsp;Update</button> 
+								<button type="button" class="btn btn-default btn-xs" data-dismiss="modal">Close</button>
+							</div>
+						</form>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</div>
+
+		<div class="container-fluid">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					Description: Simple CRUD using AngularJS, Bootstrap, Datatables, PHP and MariaDB/MySQL
+					<b><h3>Books</h3></b>
+				</div>
+				<div class="panel-body">
+					<div class="form-group" align="right">
+						<button type="button" class="btn btn-success btn-xs" ng-click="new()"><span class="glyphicon glyphicon-plus"></span>&nbsp;New</button>
+					</div>
+					<div class="table-responsive" style="overflow-x: unset;">
+						<table class="table table-bordered table-condensed table-striped" datatable="ng" dt-options="vm.dtOptions" ng-init="findall()">
+							<thead>
+								<tr>
+									<th width="10%">ID</th>
+									<th width="10%">title</th>     
+									<th width="10%">description</th>
+									<th width="10%">author</th>
+									<th width="10%">category</th> 
+									<th width="10%">language</th>
+									<th width="10%">country</th>
+									<th width="10%">status</th>
+									<th width="10%">date</th> 
+									<th width="10%">Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="row in rows">
+									<td>{{row.id}}</td>
+									<td>{{row.title}}</td>      
+									<td>{{row.description}}</td>
+									<td>{{row.author}}</td>
+									<td>{{row.category}}</td>
+									<td>{{row.language}}</td>
+									<td>{{row.country}}</td>
+									<td>{{row.status}}</td>
+									<td>{{row.date}}</td>
+									<td>
+										<button type="button" class="btn btn-default btn-xs" ng-click="find(row.id)"><span class="glyphicon glyphicon-edit"></span>&nbsp;Edit</button>
+										<button type="button" class="btn btn-default btn-xs" ng-click="delete(row.id)"><span class="glyphicon glyphicon-minus"></span>&nbsp;Delete</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="books.js"></script>
+
+	</body>
+	
+</html>
